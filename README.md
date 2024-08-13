@@ -200,13 +200,13 @@ To deploy the migration and update process for your Bitnami WordPress instance o
 First, clone the repository containing the Terraform configuration to your local machine:
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/jexnator/wordpress-bitnami-lightsail-patch-migrate-update.git
 ```
 
 Once cloned, navigate into the `terraform` directory:
 
 ```bash
-cd <repo-name>/terraform
+cd /terraform
 ```
 
 ### 2. **Initialize Terraform**
