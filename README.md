@@ -1,4 +1,4 @@
-# Bitnami WordPress on AWS Lightsail Migrate and Update Tool
+# WordPress Bitnami on AWS Lightsail Migrate and Update Tool
 
 ## Table of Contents
 
