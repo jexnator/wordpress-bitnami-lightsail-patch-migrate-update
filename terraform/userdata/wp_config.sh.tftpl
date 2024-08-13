@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#***********************************************************
+# wp_config.sh.tftpl
+#
+# This file contains the user data script to configure the
+# wp-config.php file of the WordPress instance upon launch.
+#***********************************************************
+
+LOG_FILE="/home/bitnami/configure.log"
+NEW_WP_PATH="${NEW_WP_PATH}"
+DB_NAME="${DB_NAME}"
+DB_USER="${DB_USER}"
+DB_PASSWORD="${DB_PASSWORD}"
+DB_HOST="${DB_HOST}"
+WP_TABLE_PREFIX="${WP_TABLE_PREFIX}"
+USE_EXTERNAL_DB="${USE_EXTERNAL_DB}"
+
+# Create Log file
+touch "$LOG_FILE"
+
+# Redirect all output to the log file
+exec >> $LOG_FILE 2>&1
+
+# Log the start of the script
+echo 'Starting configuration script...'
+
+if [ "${USE_EXTERNAL_DB}" = true ]; then
+  # Update wp-config.php with database details
+  echo 'Updating wp-config.php with database details...'
+  sudo sed -i "s/define( 'DB_NAME', '.*' );/define( 'DB_NAME', '${DB_NAME}' );/g" /opt$NEW_WP_PATH/wp-config.php
+  sudo sed -i "s/define( 'DB_USER', '.*' );/define( 'DB_USER', '${DB_USER}' );/g" /opt$NEW_WP_PATH/wp-config.php
+  sudo sed -i "s/define( 'DB_PASSWORD', '.*' );/define( 'DB_PASSWORD', '${DB_PASSWORD}' );/g" /opt$NEW_WP_PATH/wp-config.php
+  sudo sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', '${DB_HOST}' );/g" /opt$NEW_WP_PATH/wp-config.php
+fi
+
+# Update table prefix in wp-config.php if not standard ("wp_")
+if [ "${WP_TABLE_PREFIX}" != "wp_" ]; then
+  echo 'Updating table prefix in wp-config.php...'
+  sudo sed -i "s/\$table_prefix = 'wp_';/\$table_prefix = '${WP_TABLE_PREFIX}';/g" /opt$NEW_WP_PATH/wp-config.php
+fi
+
+# Log the completion of the script
+echo 'Configuration script completed.'

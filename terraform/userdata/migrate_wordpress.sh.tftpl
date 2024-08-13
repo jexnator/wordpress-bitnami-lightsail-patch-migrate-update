@@ -1,0 +1,84 @@
+#!/bin/bash
+
+#***********************************************************
+# migrate_wordpress.sh.tftpl
+#
+# This file contains the script to migrate a WordPress
+# installation from an old Lightsail Bitnami instance to a
+# new one using WP-CLI.
+#***********************************************************
+
+LOG_FILE="/home/bitnami/migrate.log"
+OLD_SERVER_IP="${OLD_SERVER_IP}"
+NEW_SERVER_IP="${NEW_SERVER_IP}"
+OLD_WP_PATH="${OLD_WP_PATH}"
+NEW_WP_PATH="${NEW_WP_PATH}"
+
+# Create Log file
+touch "$LOG_FILE"
+
+# Log the start of the script
+exec > >(tee -a $LOG_FILE) 2>&1
+echo 'Starting migration script...'
+
+# Install rsync on new server
+echo 'Installing rsync on new server...'
+sudo apt-get update
+sudo apt-get install -y rsync
+
+# Install rsync on old server
+echo 'Installing rsync on old server...'
+ssh -o StrictHostKeyChecking=no -A bitnami@$OLD_SERVER_IP "sudo apt-get update && sudo apt-get install -y rsync"
+
+# SSH to old wordpress instance and create a snapshot of the db
+echo 'Exporting database from old server...'
+ssh -o StrictHostKeyChecking=no -A bitnami@$OLD_SERVER_IP "cd /opt$OLD_WP_PATH && sudo wp --allow-root db export --quiet /tmp/exported-wp-sql.sql > /dev/null"
+
+# Copy the database and import it to the new instance
+echo 'Copying database to new server and importing...'
+rsync -avz -e "ssh -o StrictHostKeyChecking=no -A" bitnami@$OLD_SERVER_IP:/tmp/exported-wp-sql.sql /tmp/exported-wp-sql.sql
+sudo wp db import --quiet /tmp/exported-wp-sql.sql --allow-root
+
+# Remove current wp content from new instance
+sudo rm -rf $NEW_WP_PATH/wp-content
+sudo rm -rf /opt$NEW_WP_PATH/wp-content
+sudo rm -rf /opt$NEW_WP_PATH/wp-includes
+sudo rm -rf /opt$NEW_WP_PATH/wp-admin
+sudo rm -rf /opt$NEW_WP_PATH/tmp
+
+# Copy the wordpress content from the old instance to the new, excluding certain files and preserving symlinks
+echo 'Copying wordpress folder from old server to new server...'
+sudo chown -R bitnami:daemon $NEW_WP_PATH
+sudo usermod -aG daemon bitnami
+rsync -avz -e "ssh -o StrictHostKeyChecking=no -A" --rsync-path="sudo rsync" --copy-links \
+  --exclude=wp-content \
+  --exclude=wp-config.php \
+  --exclude=wp-activate.php \
+  --exclude=wp-blog-header.php \
+  --exclude=wp-comments-post.php \
+  --exclude=wp-cron.php \
+  --exclude=wp-links-opml.php \
+  --exclude=wp-load.php \
+  --exclude=wp-login.php \
+  --exclude=wp-mail.php \
+  --exclude=wp-settings.php \
+  --exclude=wp-signup.php \
+  --exclude=wp-trackback.php \
+  --exclude=xmlrpc.php \
+  bitnami@$OLD_SERVER_IP:/opt$OLD_WP_PATH/ /opt$NEW_WP_PATH/
+
+# Get wp-content folder from old instance
+rsync -avz -e "ssh -o StrictHostKeyChecking=no -A" --rsync-path="sudo rsync" --copy-links \
+  bitnami@$OLD_SERVER_IP:/opt$OLD_WP_PATH/wp-content $NEW_WP_PATH/
+
+# Restore the wp-content symlink
+sudo ln -sfn $NEW_WP_PATH/wp-content /opt$NEW_WP_PATH/wp-content
+sudo deluser bitnami daemon
+
+# Restart all LAMP-Core services and remove temporary files
+echo 'Restarting WordPress services...'
+sudo /opt/bitnami/ctlscript.sh restart
+rm /tmp/exported-wp-sql.sql
+
+# Log the completion of the script
+echo 'WordPress migration completed successfully.'

@@ -1,0 +1,58 @@
+#!/bin/bash
+
+#***********************************************************
+# wp_update.sh.tftpl
+#
+# This file contains the script to update WordPress core,
+# plugins and themes using WP-CLI.
+#***********************************************************
+
+LOG_FILE="/home/bitnami/update.log"
+NEW_WP_PATH="${NEW_WP_PATH}"
+UPDATE_WP_CORE="${UPDATE_WP_CORE}"
+UPDATE_WP_PLUGINS="${UPDATE_WP_PLUGINS}"
+UPDATE_WP_THEMES="${UPDATE_WP_THEMES}"
+
+# Create Log file
+touch "$LOG_FILE"
+
+# Log the start of the script
+exec > >(tee -a $LOG_FILE) 2>&1
+echo 'Starting WordPress update script...'
+
+# Temporarily lower permissions to avoid conflicts with bitnami specific
+# permission sets during wp core and plugin updates
+echo 'Temporarily lower permissions for wp core, plugin & themes updates...'
+sudo chmod -R 777 /opt$NEW_WP_PATH
+sudo chmod -R 777 $NEW_WP_PATH
+
+# Update WordPress core if enabled
+if [ "${UPDATE_WP_CORE}" = true ]; then
+  echo 'Updating WordPress core...'
+  sudo wp core update --allow-root
+fi
+
+# Update all WordPress plugins if enabled
+if [ "${UPDATE_WP_PLUGINS}" = true ]; then
+  echo 'Updating WordPress plugins...'
+  sudo wp plugin update --all --allow-root
+fi
+
+# Update all WordPress themes if enabled
+if [ "${UPDATE_WP_THEMES}" = true ]; then
+  echo 'Updating WordPress themes...'
+  sudo wp theme update --all --allow-root
+fi
+
+# Reset permissions according to Bitnami recommendations
+echo 'Resetting permissions of the necessary directories...'
+sudo chown -R bitnami:daemon /opt/bitnami/wordpress
+sudo find /opt$NEW_WP_PATH -type d -exec chmod 775 {} \;
+sudo find /opt$NEW_WP_PATH -type f -exec chmod 664 {} \;
+sudo chown -R bitnami:daemon $NEW_WP_PATH
+sudo find $NEW_WP_PATH -type d -exec chmod 775 {} \;
+sudo find $NEW_WP_PATH -type f -exec chmod 664 {} \;
+sudo chmod 640 $NEW_WP_PATH/wp-config.php
+
+# Log the completion of the script
+echo 'WordPress update completed.'
