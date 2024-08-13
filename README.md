@@ -58,7 +58,7 @@ Below are two example architectures. These are intended for illustrative purpose
 ## Folder Structure Tool
 
 ```bash
-bitnami-wordpress-lightsail-patch-migrate-update
+wordpress-bitnami-lightsail-patch-migrate-update
 ├── README.md
 ├── doc
 │   └── prerequisites
