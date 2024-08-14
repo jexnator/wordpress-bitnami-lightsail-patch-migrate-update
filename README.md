@@ -58,18 +58,24 @@ Below are two example architectures. These are intended for illustrative purpose
 ## Folder Structure Tool
 
 ```bash
-wordpress-bitnami-lightsail-patch-migrate-update
+bitnami-wordpress-lightsail-patch-migrate-update
 ├── README.md
 ├── doc
+│   ├── configuration
+│   │   └── tf-configuration.md
+│   ├── img
+│   │   ├── aws-programatic-access.gif
+│   │   ├── create-lightsail-key-pair.gif
+│   │   ├── wordpress-on-lightsail.gif
+│   │   └── wp-patch-update.png
+│   ├── modules
+│   │   └── modules.md
 │   └── prerequisites
 │       ├── aws-cli-installation.md
 │       ├── aws-credentials-configuration.md
-│       ├── aws-programatic-access.gif
-│       ├── create-lightsail-key-pair.gif
 │       ├── ssh-agent-forwarding.md
 │       ├── ssh-key-pairs.md
-│       ├── terraform-installation.md
-│       └── wp-patch-update.png
+│       └── terraform-installation.md
 ├── logs
 │   ├── configure.log
 │   ├── migrate.log
@@ -99,85 +105,20 @@ wordpress-bitnami-lightsail-patch-migrate-update
 
 ## Terraform Modules
 
-This Terraform configuration is structured using modules to separate concerns and make the deployment process more modular and reusable. Below is a brief description of each module and its purpose:
+This Terraform configuration is structured using 4 modules to separate concerns and make the deployment process more modular and reusable.
 
-### Module: bitnami-lightsail-instance
+- Module: bitnami-lightsail-instance
+- Modules: external-lightsail-mysql-db
+- Module: migration
+- Module: wordpress-update
 
-This module provisions a new AWS Lightsail instance using the latest WordPress (from Bitnami) image. It handles the following:
-
-**Instance Creation**: Launches a new WordPress Lightsail instance (pre-packaged by Bitnami):
-
-- Configs: Associates the specified SSH key pair with the new instance and sets up your instance according the specified bundle_id.
-- Snapshots: Enables auto snapshots on a daily basis (00:00 UTC) for your new WordPress Lightsail instance
-- wp-config.php: Configures the new WordPress instance with the necessary settings, including database credentials (optional) and table prefixes (optional).
-
-### Modules: external-lightsail-mysql-db
-
-This module is optional and used only if you choose to configure an external MySQL database instead of using the internal MariaDB on the Wordpress Bitnami Lightsail instance. It handles:
-
-- **Database Provisioning**: Creates a new Lightsail MySQL database instance with the specified resource bundle.
-- **Database Configuration**: Sets up the new database with the provided name and username.
-- **Password Management**: Generates a secure password for the database and outputs it for use in the WordPress configuration.
-
-### Module: migration
-
-This module manages the migration of WordPress content and database from the old Wordpress Bitnami Lightsail instance to the new one. It handles:
-
-- **Content Migration**: Uses `rsync` over SSH to securely transfer the `wp-content`, `wp-admin`, and `wp-includes` directories from the old instance to the new one.
-- **Database Migration**: Exports the WordPress database from the old instance and imports it into the new instance using `wp-cli`.
-- **SSH Connection Management**: Establishes secure SSH connections to both the old and new instances for the migration process.
-
-### Module: wordpress-update
-
-This module is responsible for updating WordPress components on the new instance after the migration is complete. It handles:
-
-- **Core Update**: Optionally updates the WordPress core to the latest version.
-- **Plugin Update**: Optionally updates all installed WordPress plugins to their latest versions.
-- **Theme Update**: Optionally updates all installed WordPress themes to their latest versions.
-- **Logging**: Captures detailed logs of the update process and retrieves them to your local machine for review.
-
-Each module is designed to perform a specific task in the overall migration and update process, making the configuration more modular, maintainable, and easier to customize.
+For details on what each module does, refer to the [Module Details](doc/modules/modules.md).
 
 ## Configuration in `terraform.tfvars` file
 
-In this section, you will configure the necessary variables for deploying your new WordPress Bitnami Lightsail instance, migrating and updating your WordPress page using Terraform. The configuration needs to be made in the `terraform.tfvars` file, which defines all required and optional settings. Below is a breakdown of what you need to pay attention to. It is commented in more detail in the file itself.
+In this section, you will configure the necessary variables for deploying your new WordPress Bitnami Lightsail instance, migrating, and updating your WordPress site using Terraform. The configuration needs to be made in the `terraform.tfvars` file, which defines all required and optional settings.
 
-### 1. Required Configurations
-
-These configurations are mandatory for the deployment process. You need to specify the AWS region, the IPv4 address of the old WordPress instance, SSH keys for both old and new instances, and the bundle ID for the new WordPress Bitnami Lightsail instance.
-
-- **AWS Region**: Specify the region where your Lightsail resources will be deployed.
-- **Environment**: Set the environment for your deployment e.g., dev, stage, prod (is used in the name of the Lightsail instance "wordpress-<env>-<timestamp>").
-- **Old WordPress Instance IP**: Provide the IP address of your current WordPress instance.
-- **SSH Key Pairs**: It's recommended to generate a new key pair for the new instance via the AWS Lightsail Management Console (The detailed instructions for this are covered in Prerequisites). You may use the same key pair as the old instance, but this is not recommended for security reasons.
-- **Bundle ID for New Instance**: Choose a bundle ID that matches the resource requirements for your new instance.
-
-### 2. WordPress Configurations
-
-These settings are related to the WordPress-specific configurations on your new instance.
-
-- **Table Prefix**: Specify the WordPress table prefix. If your old instance uses a custom prefix, update this variable accordingly.
-- **Update WordPress Core, Plugins, and Themes**: These options allow you to control whether the core, plugins, and themes should be updated post-migration. The default behavior is to update all.
-
-### 3. Tags
-
-Use this section to tag your AWS Lightsail resources. Tags in AWS help you identify and manage your resources more effectively.
-
-- **Name, Github, Owner**: Customize these tags as needed. They will be applied to all created resources.
-
-### 4. Path Configurations
-
-These paths point to the `wp-content` folder and `wp-config.php` file on both the old and new instances.
-
-- **Old and New WordPress Path**: Default is `/bitnami/wordpress`. Modify these only if you have a custom setup.
-
-### 5. Optional Database Configuration
-
-This section is relevant if you choose to use an external MySQL Lightsail database instead of the built-in MariaDB.
-
-- **Use External Database**: Set this to `true` if you wish to use an external database.
-- **Database Name and Username**: Customize these as needed for your external database (pw gets auto generated).
-- **Database Bundle ID**: Similar to the instance bundle ID, this allows you to specify the resource requirements for your database instance.
+Therefore read through the steps in the [Terraform Configuration Guide](doc/configuration/tf-configuration.md) and consider the comments in the `terraform.tfvars` file itself.
 
 ## Prerequisites
 
@@ -189,11 +130,11 @@ Before using this tool, ensure you have the following prerequisites (go through 
 - **SSH Key Pairs**: [Create & Download SSH key pairs the old and new Lightsail instances](doc/prerequisites/ssh-key-pairs.md)
 - **SSH Agent Forwarding enabled and key(s) added**: [Configure SSH Agent Forwarding](doc/prerequisites/ssh-agent-forwarding.md)
 
-## Deployment
-
-## Deployment
+# Deployment
 
 To deploy the migration and update process for your Bitnami WordPress instance on AWS Lightsail, follow the steps below. Using an IDE can be beneficial for managing your configuration files and running commands directly from an integrated terminal.
+
+Before deployment, make sure that all prerequisites have been successfully completed.
 
 ### 1. **Clone the Repository**
 
@@ -219,7 +160,9 @@ terraform init
 
 ### 3. **Configure Terraform Variables**
 
-Ensure that all necessary configurations have been specified in the `terraform.tfvars` file. This includes AWS region, SSH key paths, and any optional configurations like database settings. Refer to the `terraform.tfvars` section for detailed guidance.
+Ensure that all necessary configurations have been specified in the `terraform.tfvars` file. This includes AWS region, SSH key paths, and any optional configurations like database settings. See [here](doc/configuration/tf-configuration.md).
+
+Also, make sure that SSH Agent forwarding is configured and that the private keys for both the old and new Lightsail instances have been added to the SSH agent using `ssh-add /path/to/key.pem`. See [here](/doc/prerequisites/ssh-agent-forwarding.md)
 
 ### 4. **Validate the Configuration**
 
@@ -252,6 +195,10 @@ terraform apply --auto-approve
 During the deployment, Terraform will output the progress in the terminal, including any remote execution commands and their results. Once the deployment is complete, the public IP address of the new Bitnami WordPress instance will be displayed in the terminal output.
 
 You can then copy this IP address into your browser to verify that the site has been successfully migrated and is functioning as expected.
+
+If you are satisfied with the migration, you need to manually update your DNS records to point to the new instance IP address or reconfigure SSL/TLS certificates as needed. For instance, you might need to update bncert or modify the Lightsail Load Balancer settings to direct traffic to the new Bitnami instance.
+
+Additionally, after verifying the new instance is working as expected, the old Lightsail instance must be manually decommissioned.
 
 ## Logging
 
