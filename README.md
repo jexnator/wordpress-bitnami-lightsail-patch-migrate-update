@@ -210,7 +210,7 @@ Throughout the deployment process, the tool generates detailed logs for monitori
 
 # Aftermath
 
-If you plan to use this tool multiple times or need to re-run the migration, patching, and updating process after some time, it's important to reset the Terraform state. This ensures that Terraform will not try to reconcile the existing infrastructure with the desired state, which could lead to unexpected behavior.
+If you plan to use this tool multiple times or need to re-run the migration, patching, and updating process after some time, it's important to reset the Terraform state. This ensures that Terraform will not try to reconcile the existing infrastructure with the desired state.
 
 To reset the state and prepare for a fresh deployment, navigate to the Terraform directory and run the following command:
 
