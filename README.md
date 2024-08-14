@@ -16,14 +16,14 @@
 
 ## Overview
 
-Maintaining an up-to-date WordPress installation on AWS Lightsail with the WordPress Bitnami image can be challenging due to the limitations of updating the underlying LAMP components (Linux, Apache, MySQL/MariaDB, PHP) directly on the Lightsail instance. The Bitnami WordPress image bundles these components, which are adapted to each other and optimized for WordPress, making in-place updates infeasible. As a result, it becomes necessary to spin up a new AWS Lightsail instance with the latest Bitnami WordPress image and migrate the WordPress content from the old instance to the new one.
+Maintaining an up-to-date WordPress installation on AWS Lightsail with the WordPress Bitnami image can be challenging due to the limitations of updating the underlying LAMP components (Linux, Apache, MySQL/MariaDB, PHP) directly on the Lightsail instance. The WordPress image packaged by Bitnami bundles these components, which are adapted to each other and optimized for WordPress, making in-place updates infeasible. As a result, it becomes necessary to spin up a new AWS Lightsail instance with the latest WordPress Bitnami image and migrate the WordPress content from the old instance to the new one.
 
 ![Problem GIF](/doc/img/wordpress-on-lightsail.gif)
 
 This tool automates this process, reducing the manual steps required to achieve a fully updated and migrated WordPress site.
 Using Terraform, it handles:
 
-- the creation of a new Lightsail Bitnami WordPress instance
+- the creation of a new Lightsail WordPress Bitnami instance
 - the WordPress content migration
 - optional WordPress core, plugins, and themes updates
 - optional creation of an external MySQL Lightsail database for WordPress
@@ -36,10 +36,10 @@ Importantly, your existing Lightsail instance is neither deleted nor taken out o
 
 | **Automated Task**                                                       | **Description**                                                                                                                                                                                                      |
 | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Provisioning New Bitnami WordPress Lightsail Instance**                | Creates a new AWS Lightsail instance using the latest Bitnami WordPress image.                                                                                                                                       |
+| **Provisioning New WordPress Bitnami Lightsail Instance**                | Creates a new AWS Lightsail instance using the latest WordPress Bitnami image.                                                                                                                                       |
 | **Optional: Provisioning an External MySQL Lightsail Database Instance** | Configures an external MySQL Lightsail database instead of using the internal MariaDB on the Bitnami Lightsail instance. This involves provisioning a new Lightsail database instance with the latest MySQL version. |
-| **WordPress Content Migration**                                          | Transfers the entire WordPress installation (including wp-content, wp-admin, wp-include, etc.) from the old Bitnami WordPress instance to the new one using `rsync` over an SSH connection.                          |
-| **WordPress Database Migration**                                         | Transfers the WordPress database dump from the old Bitnami WordPress instance to the new one using `wp-cli`.                                                                                                         |
+| **WordPress Content Migration**                                          | Transfers the entire WordPress installation (including wp-content, wp-admin, wp-include, etc.) from the old WordPress Bitnami instance to the new one using `rsync` over an SSH connection.                          |
+| **WordPress Database Migration**                                         | Transfers the WordPress database dump from the old WordPress Bitnami instance to the new one using `wp-cli`.                                                                                                         |
 | **Optional: WordPress Core, Plugins, and Themes Updates**                | Optionally updates the WordPress core, all installed plugins, and themes to their latest versions once the migration is complete.                                                                                    |
 | **Logging**                                                              | Creates three log files documenting the entire configuration, migration, and update process.                                                                                                                         |
 
@@ -51,7 +51,7 @@ Importantly, your existing Lightsail instance is neither deleted nor taken out o
 | **Traffic Management**         | Domain, DNS, Load Balancer, and SSL/TLS configurations are not handled by this tool. You must manually update DNS records or Load Balancer settings to point to the new instance IP address. This may involve reconfiguring bncert or updating the Lightsail Load Balancer to point to the new Bitnami instance. |
 | **Decommission Old Instance**  | After verifying the new instance, the old Lightsail instance must be manually terminated.                                                                                                                                                                                                                        |
 
-Below are two example architectures. These are intended for illustrative purposes only and serve as example use cases where this tool could help to update the Lightsail Bitnami WordPress infrastructure.
+Below are two example architectures. These are intended for illustrative purposes only and serve as example use cases where this tool could help to update the Lightsail WordPress Bitnami infrastructure.
 
 ![Example Use Cases](/doc/img/wp-patch-update.png)
 
@@ -144,7 +144,7 @@ In this section, you will configure the necessary variables for deploying your n
 
 ### 1. Required Configurations
 
-These configurations are mandatory for the deployment process. You need to specify the AWS region, the IPv4 address of the old WordPress instance, SSH keys for both old and new instances, and the bundle ID for the new Bitnami WordPress Lightsail instance.
+These configurations are mandatory for the deployment process. You need to specify the AWS region, the IPv4 address of the old WordPress instance, SSH keys for both old and new instances, and the bundle ID for the new WordPress Bitnami Lightsail instance.
 
 - **AWS Region**: Specify the region where your Lightsail resources will be deployed.
 - **Environment**: Set the environment for your deployment e.g., dev, stage, prod (is used in the name of the Lightsail instance "wordpress-<env>-<timestamp>").
