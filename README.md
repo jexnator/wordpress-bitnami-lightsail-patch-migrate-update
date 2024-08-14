@@ -162,7 +162,7 @@ terraform init
 
 Ensure that all necessary configurations have been specified in the `terraform.tfvars` file. This includes AWS region, SSH key paths, and any optional configurations like database settings. See [here](doc/configuration/tf-configuration.md).
 
-Also, make sure that SSH Agent forwarding is configured and that the private keys for both the old and new Lightsail instances have been added to the SSH agent using `ssh-add /path/to/key.pem`. See [here](/doc/prerequisites/ssh-agent-forwarding.md)
+Also, make sure that SSH Agent forwarding is configured and that the private keys for both the old and new Lightsail instances have been added to the SSH agent using `ssh-add /path/to/key.pem`. See [here](/doc/prerequisites/ssh-agent-forwarding.md).
 
 ## 4. **Validate the Configuration**
 
