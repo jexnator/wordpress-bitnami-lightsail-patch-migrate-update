@@ -127,7 +127,7 @@ Before using this tool, ensure you have the following prerequisites (go through 
 - **Terraform Installed**: [Install Terraform](doc/prerequisites/terraform-installation.md)
 - **AWS CLI Installed**: [Install AWS CLI](doc/prerequisites/aws-cli-installation.md)
 - **AWS Credentials**: [Create and Configure AWS Credentials](doc/prerequisites/aws-credentials-configuration.md)
-- **SSH Key Pairs**: [Create & Download SSH key pairs the old and new Lightsail instances](doc/prerequisites/ssh-key-pairs.md)
+- **SSH Key Pairs**: [Create & Download SSH key pairs for the old and new Lightsail instances](doc/prerequisites/ssh-key-pairs.md)
 - **SSH Agent Forwarding enabled and key(s) added**: [Configure SSH Agent Forwarding](doc/prerequisites/ssh-agent-forwarding.md)
 
 # Deployment
