@@ -14,7 +14,7 @@
 - [Logging](#logging)
 - [Aftermath](#aftermath)
 
-## Overview
+# Overview
 
 Maintaining an up-to-date WordPress installation on AWS Lightsail with the WordPress Bitnami image can be challenging due to the limitations of updating the underlying LAMP components (Linux, Apache, MySQL/MariaDB, PHP) directly on the Lightsail instance. The WordPress image packaged by Bitnami bundles these components, which are adapted to each other and optimized for WordPress, making in-place updates infeasible. As a result, it becomes necessary to spin up a new AWS Lightsail instance with the latest WordPress Bitnami image and migrate the WordPress content from the old instance to the new one.
 
@@ -28,11 +28,11 @@ Using Terraform, it handles:
 - optional WordPress core, plugins, and themes updates
 - optional creation of an external MySQL Lightsail database for WordPress
 
-## Which scope gets automated with this tool?
+# Which scope gets automated with this tool?
 
 Importantly, your existing Lightsail instance is neither deleted nor taken out of service by this tool. In this respect the tool establishes only an SSH connection to the old instance and uses `rsync` and `wp-cli` to migrate the WordPress content and the database dump. It is the administrator's responsibility to manually decommission the old instance after successful migration.
 
-### Automated Tasks
+## Automated Tasks
 
 | **Automated Task**                                                       | **Description**                                                                                                                                                                                                      |
 | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -43,7 +43,7 @@ Importantly, your existing Lightsail instance is neither deleted nor taken out o
 | **Optional: WordPress Core, Plugins, and Themes Updates**                | Optionally updates the WordPress core, all installed plugins, and themes to their latest versions once the migration is complete.                                                                                    |
 | **Logging**                                                              | Creates three log files documenting the entire configuration, migration, and update process.                                                                                                                         |
 
-### Manual Tasks Remaining
+## Manual Tasks Remaining
 
 | **Manual Task**                | **Description**                                                                                                                                                                                                                                                                                                  |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -55,7 +55,7 @@ Below are two example architectures. These are intended for illustrative purpose
 
 ![Example Use Cases](/doc/img/wp-patch-update.png)
 
-## Folder Structure Tool
+# Folder Structure Tool
 
 ```bash
 bitnami-wordpress-lightsail-patch-migrate-update
@@ -103,7 +103,7 @@ bitnami-wordpress-lightsail-patch-migrate-update
     └── variables.tf
 ```
 
-## Terraform Modules
+# Terraform Modules
 
 This Terraform configuration is structured using 4 modules to separate concerns and make the deployment process more modular and reusable.
 
@@ -114,13 +114,13 @@ This Terraform configuration is structured using 4 modules to separate concerns 
 
 For details on what each module does, refer to the [Module Details](doc/modules/modules.md).
 
-## Configuration in `terraform.tfvars` file
+# Configuration in `terraform.tfvars` file
 
 In this section, you will configure the necessary variables for deploying your new WordPress Bitnami Lightsail instance, migrating, and updating your WordPress site using Terraform. The configuration needs to be made in the `terraform.tfvars` file, which defines all required and optional settings.
 
 Therefore read through the steps in the [Terraform Configuration Guide](doc/configuration/tf-configuration.md) and consider the comments in the `terraform.tfvars` file itself.
 
-## Prerequisites
+# Prerequisites
 
 Before using this tool, ensure you have the following prerequisites (go through the links for detailed documentation for MacOS/Windows):
 
@@ -136,7 +136,7 @@ To deploy the migration and update process for your Bitnami WordPress instance o
 
 Before deployment, make sure that all prerequisites have been successfully completed.
 
-### 1. **Clone the Repository**
+## 1. **Clone the Repository**
 
 First, clone the repository containing the Terraform configuration to your local machine:
 
@@ -150,7 +150,7 @@ Once cloned, navigate into the `terraform` directory:
 cd /terraform
 ```
 
-### 2. **Initialize Terraform**
+## 2. **Initialize Terraform**
 
 Before running any Terraform commands, you need to initialize the working directory. This step downloads the necessary provider plugins and sets up the backend:
 
@@ -158,13 +158,13 @@ Before running any Terraform commands, you need to initialize the working direct
 terraform init
 ```
 
-### 3. **Configure Terraform Variables**
+## 3. **Configure Terraform Variables**
 
 Ensure that all necessary configurations have been specified in the `terraform.tfvars` file. This includes AWS region, SSH key paths, and any optional configurations like database settings. See [here](doc/configuration/tf-configuration.md).
 
 Also, make sure that SSH Agent forwarding is configured and that the private keys for both the old and new Lightsail instances have been added to the SSH agent using `ssh-add /path/to/key.pem`. See [here](/doc/prerequisites/ssh-agent-forwarding.md)
 
-### 4. **Validate the Configuration**
+## 4. **Validate the Configuration**
 
 To check if your configuration is syntactically valid, run:
 
@@ -174,7 +174,7 @@ terraform validate
 
 This command ensures that your Terraform files are correctly configured and ready for deployment.
 
-### 5. **Plan the Deployment**
+## 5. **Plan the Deployment**
 
 The `terraform plan` command creates an execution plan, allowing you to preview the changes that will be made:
 
@@ -184,7 +184,7 @@ terraform plan
 
 This step is crucial for understanding the resources that Terraform will create, modify, or destroy.
 
-### 6. **Apply the Configuration**
+## 6. **Apply the Configuration**
 
 Finally, apply the configuration to deploy the new WordPress instance, migrate content, and update WordPress components:
 
@@ -200,7 +200,7 @@ If you are satisfied with the migration, you need to manually update your DNS re
 
 Additionally, after verifying the new instance is working as expected, the old Lightsail instance must be manually decommissioned.
 
-## Logging
+# Logging
 
 Throughout the deployment process, the tool generates detailed logs for monitoring and troubleshooting purposes. These logs are stored in the `logs` folder within the project directory. The following log files are created during deployment:
 
@@ -208,7 +208,7 @@ Throughout the deployment process, the tool generates detailed logs for monitori
 - **migrate.log**: Records details of the content migration process from the old instance to the new one.
 - **update.log**: Logs all actions related to WordPress core, plugins, and themes updates.
 
-## Aftermath
+# Aftermath
 
 If you plan to use this tool multiple times or need to re-run the migration, patching, and updating process after some time, it's important to reset the Terraform state. This ensures that Terraform will not try to reconcile the existing infrastructure with the desired state, which could lead to unexpected behavior.
 
@@ -220,6 +220,6 @@ rm -r terraform.tfstate terraform.tfstate.backup .terraform .terraform.lock.hcl 
 
 This command deletes the current Terraform state files and reinitializes the Terraform environment, allowing you to start the process anew without any residual data from previous runs.
 
-### Final Considerations
+## Final Considerations
 
 As a final step after a successful deployment, it may be prudent to delete the IAM user created for this process to minimize security risks. Ensure that the private keys used during the process are stored securely, and consider deleting them from your local machine after the deployment to stay safe.
