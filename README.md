@@ -1,6 +1,6 @@
 # WordPress Bitnami on AWS Lightsail Migrate and Update Tool
 
-## Table of Contents
+## ToC
 
 - [Overview](#overview)
 - [Which Scope Gets Automated?](#which-scope-gets-automated)
