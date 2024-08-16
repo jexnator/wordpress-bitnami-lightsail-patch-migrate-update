@@ -158,6 +158,20 @@ Before running any Terraform commands, you need to initialize the working direct
 terraform init
 ```
 
+## 3. **Add your private key(s) to the SSH agent**
+
+- Add the private key(s) for both the old and new WordPress Bitnami Lightsail instances to the SSH agent to enable forwarding with the following commands (Consider using a new key for your new instance):
+  **MacOS**
+  ```bash
+  ssh-add /path/to/old-instance-private-key.pem
+  ssh-add /path/to/new-instance-private-key.pem
+  ```
+  **Windows**
+  ```powershell
+  ssh-add C:\path\to\old-instance-private-key.pem
+  ssh-add C:\path\to\new-instance-private-key.pem
+  ```
+
 ## 3. **Configure Terraform Variables**
 
 Ensure that all necessary configurations have been specified in the `terraform.tfvars` file. This includes AWS region, SSH key paths, and any optional configurations like database settings. See [here](doc/configuration/tf-configuration.md).
