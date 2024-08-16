@@ -23,9 +23,17 @@ SSH Agent Forwarding allows you to use your local SSH keys to authenticate on a 
 
 ## Windows (11)
 
-1. **Enable and Start the SSH Agent**:
+1. **Update OpenSSH via Chocolatey**:
 
-   - Open **PowerShell** or **Command Prompt** with administrative privileges and set the SSH agent to start automatically:
+   - Open **PowerShell** with administrative privileges and update OpenSSH using Chocolatey. Note: Update is mandatory, because the SSH agent forwarding with older or the pre-installed version of OpenSSH on Windows does not work correctly when forwarding to Linux instances!:
+
+   ```powershell
+   choco install openssh -y
+   ```
+
+2. **Enable and Start the SSH Agent**:
+
+   - Set the SSH agent to start automatically:
 
    ```powershell
    Get-Service ssh-agent | Set-Service -StartupType Automatic
@@ -37,7 +45,7 @@ SSH Agent Forwarding allows you to use your local SSH keys to authenticate on a 
    Start-Service ssh-agent
    ```
 
-2. **Add Your Private Key(s) to the SSH Agent**:
+3. **Add Your Private Key(s) to the SSH Agent**:
    - Add the private key(s) for both the old and new WordPress Bitnami instances to the SSH agent using the following commands:
    ```powershell
    ssh-add C:\path\to\old-instance-private-key.pem
