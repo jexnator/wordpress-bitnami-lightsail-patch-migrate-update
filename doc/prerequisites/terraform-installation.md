@@ -42,7 +42,7 @@
    Open PowerShell with Administrator rights and run the following command:
 
    ```powershell
-   choco install terraform
+   choco install terraform -y
    ```
 
 3. **Verify the Installation**:

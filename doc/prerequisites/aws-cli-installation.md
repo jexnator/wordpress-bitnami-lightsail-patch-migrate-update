@@ -41,7 +41,7 @@
    Open PowerShell with Administrator rights and run the following command:
 
    ```powershell
-   choco install awscli
+   choco install awscli -y
    ```
 
 3. **Verify the Installation**:
