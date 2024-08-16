@@ -12,13 +12,6 @@ SSH Agent Forwarding allows you to use your local SSH keys to authenticate on a 
    eval "$(ssh-agent -s)"
    ```
 
-2. **Add Your Private Key(s) to the SSH Agent**:
-   - Add the private key(s) for both the old and new WordPress Bitnami instances to the SSH agent with the following commands:
-   ```bash
-   ssh-add /path/to/old-instance-private-key.pem
-   ssh-add /path/to/new-instance-private-key.pem
-   ```
-
 ---
 
 ## Windows (11)
@@ -43,13 +36,6 @@ SSH Agent Forwarding allows you to use your local SSH keys to authenticate on a 
 
    ```powershell
    Start-Service ssh-agent
-   ```
-
-3. **Add Your Private Key(s) to the SSH Agent**:
-   - Add the private key(s) for both the old and new WordPress Bitnami instances to the SSH agent using the following commands:
-   ```powershell
-   ssh-add C:\path\to\old-instance-private-key.pem
-   ssh-add C:\path\to\new-instance-private-key.pem
    ```
 
 ---
