@@ -160,7 +160,7 @@ terraform init
 
 ## 3. **Add your private key(s) to the SSH agent**
 
-- Add the private key(s) for both the old and new WordPress Bitnami Lightsail instances to the SSH agent to enable forwarding with the following commands (Consider using a new key for your new instance):
+- Add the private key(s) for both the old and new WordPress Bitnami Lightsail instances to the SSH agent to enable forwarding with the following commands (Consider using a new key for your new instance):<br>
   **MacOS**
   ```bash
   ssh-add /path/to/old-instance-private-key.pem
