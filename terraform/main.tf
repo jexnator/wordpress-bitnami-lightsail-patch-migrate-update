@@ -81,3 +81,7 @@ module "wordpress-update" {
   update_wp_themes          = var.update_wp_themes
   depends_on                = [module.migration]
 }
+
+output "wordpress_instance_ip" {
+  value = module.bitnami-lightsail-instance.wordpress_instance_ip
+}
