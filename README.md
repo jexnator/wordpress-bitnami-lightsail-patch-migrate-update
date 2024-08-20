@@ -174,7 +174,7 @@ git clone https://github.com/jexnator/wordpress-bitnami-lightsail-patch-migrate-
 Once cloned, navigate into the `terraform` directory:
 
 ```bash
-cd terraform
+cd wordpress-bitnami-lightsail-patch-migrate-update/terraform
 ```
 
 ## 2. **Initialize Terraform**
