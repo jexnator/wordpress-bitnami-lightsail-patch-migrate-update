@@ -141,7 +141,6 @@ Before using this tool, ensure you have the following prerequisites (go through 
 - **AWS CLI Installed**: [Install AWS CLI](doc/prerequisites/aws-cli-installation.md)
 - **AWS Credentials**: [Create and Configure AWS Credentials](doc/prerequisites/aws-credentials-configuration.md)
 - **SSH Key Pairs**: [Create & Download SSH key pairs for the old and new Lightsail instances](doc/prerequisites/ssh-key-pairs.md)
-- **SSH Agent Forwarding enabled and key(s) added**: [Configure SSH Agent Forwarding](doc/prerequisites/ssh-agent-forwarding.md)
 
 # Deployment
 
@@ -187,7 +186,13 @@ terraform init
 
 ## 3. **Add your private key(s) to the SSH agent**
 
-- Add the private key(s) for both the old and new WordPress Bitnami Lightsail instances to the SSH agent to enable forwarding with the following commands (Consider using a new key for your new instance):
+- First, start the SSH agent:
+
+  ```bash
+  eval "$(ssh-agent -s)"
+  ```
+
+- Then, add the private key(s) for both the old and new WordPress Bitnami Lightsail instances to the SSH agent to enable forwarding (Consider using a new key for your new instance):
 
   ```bash
   ssh-add /path/to/old-instance-private-key.pem
