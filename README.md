@@ -130,11 +130,44 @@ Before using this tool, ensure you have the following prerequisites (go through 
 - **SSH Key Pairs**: [Create & Download SSH key pairs for the old and new Lightsail instances](doc/prerequisites/ssh-key-pairs.md)
 - **SSH Agent Forwarding enabled and key(s) added**: [Configure SSH Agent Forwarding](doc/prerequisites/ssh-agent-forwarding.md)
 
+# Prerequisites
+
+This tool can be used on both macOS and Windows. However, on Windows, the SSH agent integration with Terraform is limited. For full functionality, including proper SSH agent forwarding, Windows users need to use WSL (Windows Subsystem for Linux) for the deployment.
+
+Before using this tool, ensure you have the following prerequisites (go through the links for detailed documentation for macOS/Windows):
+
+- **WSL installed if on Windows**: [Install WSL](doc/prerequisites/wsl-installation.md)
+- **Terraform Installed**: [Install Terraform](doc/prerequisites/terraform-installation.md)
+- **AWS CLI Installed**: [Install AWS CLI](doc/prerequisites/aws-cli-installation.md)
+- **AWS Credentials**: [Create and Configure AWS Credentials](doc/prerequisites/aws-credentials-configuration.md)
+- **SSH Key Pairs**: [Create & Download SSH key pairs for the old and new Lightsail instances](doc/prerequisites/ssh-key-pairs.md)
+- **SSH Agent Forwarding enabled and key(s) added**: [Configure SSH Agent Forwarding](doc/prerequisites/ssh-agent-forwarding.md)
+
+---
+
 # Deployment
 
 To deploy the migration and update process for your Bitnami WordPress instance on AWS Lightsail, follow the steps below. Using an IDE can be beneficial for managing your configuration files and running commands directly from an integrated terminal.
 
-Before deployment, make sure that all prerequisites have been successfully completed.
+Before deployment, ensure that all prerequisites have been successfully completed.
+
+---
+
+## **only Windows Users**
+
+1. **Open PowerShell as Administrator**:
+
+   - Press `Windows Key + X`, then select **Terminal** to open PowerShell.
+
+2. **Start WSL**:
+
+   - Inside the PowerShell terminal, start WSL by entering the following command:
+
+   ```powershell
+   wsl
+   ```
+
+---
 
 ## 1. **Clone the Repository**
 
@@ -147,7 +180,7 @@ git clone https://github.com/jexnator/wordpress-bitnami-lightsail-patch-migrate-
 Once cloned, navigate into the `terraform` directory:
 
 ```bash
-cd /terraform
+cd terraform
 ```
 
 ## 2. **Initialize Terraform**
@@ -160,25 +193,22 @@ terraform init
 
 ## 3. **Add your private key(s) to the SSH agent**
 
-- Add the private key(s) for both the old and new WordPress Bitnami Lightsail instances to the SSH agent to enable forwarding with the following commands (Consider using a new key for your new instance):<br>
-  **MacOS**
+- Add the private key(s) for both the old and new WordPress Bitnami Lightsail instances to the SSH agent to enable forwarding with the following commands (Consider using a new key for your new instance):
+
+  **MacOS and Windows (via WSL)**
+
   ```bash
   ssh-add /path/to/old-instance-private-key.pem
   ssh-add /path/to/new-instance-private-key.pem
   ```
-  **Windows**
-  ```powershell
-  ssh-add C:\path\to\old-instance-private-key.pem
-  ssh-add C:\path\to\new-instance-private-key.pem
-  ```
 
-## 3. **Configure Terraform Variables**
+## 4. **Configure Terraform Variables**
 
 Ensure that all necessary configurations have been specified in the `terraform.tfvars` file. This includes AWS region, SSH key paths, and any optional configurations like database settings. See [here](doc/configuration/tf-configuration.md).
 
 Also, make sure that SSH Agent forwarding is configured and that the private keys for both the old and new Lightsail instances have been added to the SSH agent using `ssh-add /path/to/key.pem`. See [here](/doc/prerequisites/ssh-agent-forwarding.md).
 
-## 4. **Validate the Configuration**
+## 5. **Validate the Configuration**
 
 To check if your configuration is syntactically valid, run:
 
@@ -188,7 +218,7 @@ terraform validate
 
 This command ensures that your Terraform files are correctly configured and ready for deployment.
 
-## 5. **Plan the Deployment**
+## 6. **Plan the Deployment**
 
 The `terraform plan` command creates an execution plan, allowing you to preview the changes that will be made:
 
@@ -198,13 +228,15 @@ terraform plan
 
 This step is crucial for understanding the resources that Terraform will create, modify, or destroy.
 
-## 6. **Apply the Configuration**
+## 7. **Apply the Configuration**
 
 Finally, apply the configuration to deploy the new WordPress instance, migrate content, and update WordPress components:
 
 ```bash
 terraform apply --auto-approve
 ```
+
+---
 
 During the deployment, Terraform will output the progress in the terminal, including any remote execution commands and their results. Once the deployment is complete, the public IP address of the new Bitnami WordPress instance will be displayed in the terminal output.
 
