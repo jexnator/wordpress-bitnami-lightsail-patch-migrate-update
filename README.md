@@ -149,8 +149,6 @@ To deploy the migration and update process for your Bitnami WordPress instance o
 
 Before deployment, ensure that all prerequisites have been successfully completed.
 
----
-
 ## **Windows Users only**
 
 1. **Open PowerShell as Administrator**:
@@ -164,8 +162,6 @@ Before deployment, ensure that all prerequisites have been successfully complete
    ```powershell
    wsl
    ```
-
----
 
 ## 1. **Clone the Repository**
 
