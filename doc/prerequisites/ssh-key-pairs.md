@@ -38,6 +38,8 @@ Follow these steps to create a new SSH key pair for your new WordPress Bitnami L
 
 ---
 
+---
+
 # Set appropriate SSH permissions on private key(s) file(s)
 
 ## MacOS
@@ -53,16 +55,42 @@ chmod 400 /path/to/private-key.pem
 
 ---
 
-## Windows (11)
+## Windows (11) via WSL
 
 **Set Permissions on Private Keys for SSH**:
 
 - Make sure that you have saved the private key(s) of the old and new WordPress Bitnami instance locally.
-- To set restrictive permissions on the private key files, use the following steps:
-- Right-click the `.pem` file and select **Properties**.
-- Go to the **Security** tab, then click **Advanced**.
-- Click on **Disable inheritance** and select **Remove all inherited permissions**.
-- Click on **Add**, then **Select a principal**, and type your user name (Determine the user name using the "whoami" command in Powershell if you are not sure).
-- Set permissions to **Read & execute** + **Read** only, and click **OK**.
+- Press `Windows Key + X`, then select **Terminal** to open PowerShell.
+- Use the `cd` command to navigate to the directory where the key(s) are located on your Windows machine. For example:
+
+  ```powershell
+  cd C:\path\to\keys
+  ```
+
+- Once in the correct directory, type:
+
+  ```powershell
+  wsl
+  ```
+
+- In the WSL terminal, copy the key(s) to your Ubuntu home directory:
+
+  ```bash
+  cp <private-key>.pem /home/ubuntu/
+  ```
+
+- Set the appropriate permissions on the key(s) in your Ubuntu home directory:
+
+  ```bash
+  chmod 400 /home/ubuntu/private-key.pem
+  ```
+
+  (Repeat for each key as needed.)
+
+- After setting the permissions for each key, exit WSL:
+
+  ```bash
+  exit
+  ```
 
 ---

@@ -29,25 +29,44 @@
 
 ---
 
-## Windows (11)
+## Windows (11) via WSL
 
-1. **Install Chocolatey** (if not already installed):
-   Open PowerShell with Administrator rights and run the following command:
+1. **Open PowerShell as Administrator**:
+   Press `Windows Key + X`, then select **Terminal** to open PowerShell.
+
+2. **Launch WSL**:
+   In the PowerShell window, type:
 
    ```powershell
-   Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+   wsl
    ```
 
-2. **Install Terraform**:
-   Open PowerShell with Administrator rights and run the following command:
+3. **Install Terraform via Snap**:
+   Once in the WSL terminal, run the following command to install Terraform (you may be prompted to enter your password):
 
-   ```powershell
-   choco install terraform -y
+   ```bash
+   sudo snap install terraform --classic
    ```
 
-3. **Verify the Installation**:
-   ```powershell
+4. **Refresh Snap Packages**:
+   After installing Terraform, refresh all snap packages to ensure they are up to date:
+
+   ```bash
+   sudo snap refresh
+   ```
+
+5. **Verify the Installation**:
+   After installation, verify that Terraform is correctly installed by running:
+
+   ```bash
    terraform --version
+   ```
+
+6. **Exit WSL**:
+   Once the installation is complete, you can exit the WSL terminal by running:
+
+   ```bash
+   exit
    ```
 
 ---

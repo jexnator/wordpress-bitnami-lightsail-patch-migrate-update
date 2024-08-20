@@ -59,7 +59,7 @@ Optionally, you can also create and attach a custom policy that grants only the 
 
 - Enter the **Access key ID** and **Secret access key** when prompted.
 - Specify your desired AWS region (e.g., `eu-central-1`).
-- Leave the default output format as `json` or choose another format if preferred.
+- When prompted for the default output format, enter `json`.
 
 Example configuration process:
 
@@ -71,37 +71,51 @@ Default region name [None]: eu-central-1
 Default output format [None]: json
 ```
 
-#### **Windows:**
+- **Verify Configuration**:
 
-- Open **PowerShell**.
-- Run the following command to configure the AWS CLI:
+  ```bash
+  aws lightsail get-instances
+  ```
+
+  - If configured correctly, this command will return a list of your Lightsail instances (if any exist) in the specified region.
+
+---
+
+#### **Windows (11) via WSL**:
+
+- Press `Windows Key + X`, then select **Terminal** to open PowerShell.
+- Once in PowerShell, navigate to WSL:
 
   ```powershell
+  wsl
+  ```
+
+- In the WSL terminal, configure the AWS CLI by running:
+
+  ```bash
   aws configure
   ```
 
 - Enter the **Access key ID** and **Secret access key** when prompted.
 - Specify your desired AWS region (e.g., `eu-central-1`).
-- Leave the default output format as `json` or choose another format if preferred.
+- When prompted for the default output format, enter `json`.
 
 Example configuration process:
 
-```powershell
-PS C:\> aws configure
+```bash
+$ aws configure
 AWS Access Key ID [None]: <Your Access Key ID>
 AWS Secret Access Key [None]: <Your Secret Access Key>
 Default region name [None]: eu-central-1
 Default output format [None]: json
 ```
 
-### 8. **Verify Configuration**
-
-- To ensure everything is configured correctly, you can run the following command to list your available Lightsail resources:
+- **Verify Configuration**:
 
   ```bash
   aws lightsail get-instances
   ```
 
-- If configured correctly, this command will return a list of your Lightsail instances (if any exist) in the specified region.
+  - If configured correctly, this command will return a list of your Lightsail instances (if any exist) in the specified region.
 
 ---

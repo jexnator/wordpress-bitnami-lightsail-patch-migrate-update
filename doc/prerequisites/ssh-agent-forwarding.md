@@ -1,6 +1,6 @@
 # SSH Agent Forwarding
 
-SSH Agent Forwarding allows you to use your local SSH keys to authenticate on a remote server, providing secure access without copying private keys to the server.
+SSH Agent Forwarding allows you to use your local SSH keys to authenticate on a remote server, providing secure access without copying private keys to the server. With the steps below we ensure, that the SSH Agent is up and running.
 
 ## MacOS
 
@@ -14,28 +14,34 @@ SSH Agent Forwarding allows you to use your local SSH keys to authenticate on a 
 
 ---
 
-## Windows (11)
+## Windows (11) via WSL
 
-1. **Install OpenSSH Beta via winget**:
+1. **Open PowerShell as Administrator**:
 
-   - Open **PowerShell** with administrative privileges and install OpenSSH Beta using winget. Note: Update to OpenSSH Beta mandatory, because the SSH agent forwarding with older or the pre-installed version of OpenSSH on Windows does not work correctly when forwarding to Linux instances!:
+   - Press `Windows Key + X`, then select **Terminal** to open PowerShell.
+
+2. **Access WSL**:
+
+   - In the PowerShell terminal, start WSL:
 
    ```powershell
-   winget install "openssh beta" --accept-package-agreements --accept-source-agreements
+   wsl
    ```
 
-2. **Enable and Start the SSH Agent**:
+3. **Start the SSH Agent**:
 
-   - Set the SSH agent to start automatically:
+   - Inside the WSL terminal and start the SSH agent if it’s not already running:
 
-   ```powershell
-   Get-Service ssh-agent | Set-Service -StartupType Automatic
+   ```bash
+   eval "$(ssh-agent -s)"
    ```
 
-   - Then, start the SSH agent:
+4. **Exit WSL**:
 
-   ```powershell
-   Start-Service ssh-agent
+   - After setting up the SSH agent, exit WSL:
+
+   ```bash
+   exit
    ```
 
 ---
