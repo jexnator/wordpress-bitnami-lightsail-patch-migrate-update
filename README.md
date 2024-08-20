@@ -143,8 +143,6 @@ Before using this tool, ensure you have the following prerequisites (go through 
 - **SSH Key Pairs**: [Create & Download SSH key pairs for the old and new Lightsail instances](doc/prerequisites/ssh-key-pairs.md)
 - **SSH Agent Forwarding enabled and key(s) added**: [Configure SSH Agent Forwarding](doc/prerequisites/ssh-agent-forwarding.md)
 
----
-
 # Deployment
 
 To deploy the migration and update process for your Bitnami WordPress instance on AWS Lightsail, follow the steps below. Using an IDE can be beneficial for managing your configuration files and running commands directly from an integrated terminal.
@@ -153,7 +151,7 @@ Before deployment, ensure that all prerequisites have been successfully complete
 
 ---
 
-## **only Windows Users**
+## **Windows Users only**
 
 1. **Open PowerShell as Administrator**:
 
@@ -235,8 +233,6 @@ Finally, apply the configuration to deploy the new WordPress instance, migrate c
 ```bash
 terraform apply --auto-approve
 ```
-
----
 
 During the deployment, Terraform will output the progress in the terminal, including any remote execution commands and their results. Once the deployment is complete, the public IP address of the new Bitnami WordPress instance will be displayed in the terminal output.
 
