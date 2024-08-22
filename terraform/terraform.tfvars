@@ -23,8 +23,8 @@ env = "prod" # Default: "prod"
 old_wordpress_instance_ip = "xxx.xxx.xxx.xxx" # Example: "198.51.100.0"
 
 # Key Pair Name for the New Instance
-# Specify the name of the key pair to be used for the new WordPress instance.
-key_pair_name_new_instance = "new_instance_key_pair" # Example: "new_instance_key_pair"
+# Specify the name of the key pair to be used for the new WordPress instance (<key_pair_name> without ".pem")
+key_pair_name_new_instance = "key_pair_name" # Example: "new_instance_key_pair"
 
 # SSH Private Key Path for the Old Instance
 # Provide the file path to the SSH private key corresponding to the old WordPress instance.
